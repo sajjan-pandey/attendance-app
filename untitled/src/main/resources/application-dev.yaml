@@ -1,0 +1,40 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  main:
+    # Dev-only: initialize beans on first use to cut startup time. Trade-off is that
+    # the first request to each endpoint is slightly slower. Override via env if needed.
+    lazy-initialization: ${SPRING_MAIN_LAZY_INIT:true}
+
+  flyway:
+
+    validate-on-migrate: ${FLYWAY_VALIDATE_ON_MIGRATE:false}
+    ignore-migration-patterns: "*:missing,*:ignored"
+
+    out-of-order: ${FLYWAY_OUT_OF_ORDER:false}
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}?connectTimeout=10&socketTimeout=0&tcpKeepAlive=true
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: AuthHikariPool-Dev
+      maximum-pool-size: 50
+      minimum-idle: 3
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      leak-detection-threshold: 30000
+      connection-test-query: SELECT 1
+      auto-commit: false
+      validation-timeout: 5000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
